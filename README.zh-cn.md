@@ -6,32 +6,28 @@
 
 ## 功能说明
 
-当 AI agent 调用 `skill` 工具但该 skill 在本地不存在时，插件会拦截错误，在 skills.sh 上搜索匹配项，下载安装数最高的候选项到当前项目的 `.opencode/skills/` 目录，并通知 agent 重试——无需人工干预。
+当 AI agent 调用 `skill` 工具但该 skill 在本地不存在时，插件在工具执行前拦截调用，从 skills.sh 搜索并下载最佳匹配项到 `.opencode/skills/`，然后让工具正常执行——工具查找时 skill 已在磁盘上，无需重试。
 
 **安装前（无插件）：**
 ```
-Skill or command "systematic-debugging" not found. Available: playwright, frontend-ui-ux, ...
+Skill or command "frontend-design" not found. Available: playwright, frontend-ui-ux, ...
 ```
 
 **安装后（有插件）：**
 ```
-✓ Skill "systematic-debugging" downloaded from obra/superpowers (91,246 installs)
-  Installed to: .opencode/skills/systematic-debugging/SKILL.md
-
-Other candidates skipped (lower installs):
-  • some-other/repo (1,200)
-
-Please invoke the skill tool again with name="systematic-debugging" — it is now available.
+[auto-skill-downloader] Downloaded "frontend-design" from anthropics/skills (402,971 installs) → .opencode/skills/frontend-design/SKILL.md
+Other candidates skipped: pbakaus/impeccable (53,448)
 ```
+skill 工具随后正常加载，无需重试。
 
 ## 工作原理
 
-- 挂载 `tool.execute.after` hook——每次工具调用后触发，skill 存在时零开销
-- 检测到"未找到"时：请求 `https://skills.sh/api/skills/all-time/0`（前 200 个 skill）
+- 挂载 `tool.execute.before` hook——每次 skill 工具调用前触发，skill 已存在则立即返回
+- 搜索 `https://skills.sh/api/skills/all-time/0`（前 200 个 skill）查找匹配项
 - 优先精确匹配名称，其次模糊匹配——全部按安装数降序排列
 - 从来源 GitHub 仓库下载 `SKILL.md`，依次尝试常见路径格式
 - 安装到 `{项目目录}/.opencode/skills/{name}/SKILL.md`（项目作用域，非全局）
-- 若多个 skill 同名，选安装数最高的，并在输出中列出其余候选项
+- 若多个 skill 同名，选安装数最高的，其余候选输出到 stderr
 
 ## OpenCode
 
@@ -86,11 +82,8 @@ Fetch and follow instructions from https://raw.githubusercontent.com/2lbj/auto-s
 skills.sh 上有 9 万多个 skill，来自不同仓库。当多个 skill 同名时，插件选择安装数最高的版本并列出其余候选：
 
 ```
-✓ Skill "frontend-design" downloaded from anthropics/skills (397,885 installs)
-
-Other candidates skipped (lower installs):
-  • some-fork/skills (42)
-  • another/repo (11)
+[auto-skill-downloader] Downloaded "frontend-design" from anthropics/skills (402,971 installs)
+Other candidates skipped: some-fork/skills (42), another/repo (11)
 ```
 
 如需安装特定来源，直接使用 CLI：
