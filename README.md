@@ -33,6 +33,16 @@ Please invoke the skill tool again with name="systematic-debugging" — it is no
 - Installs to `{project}/.opencode/skills/{name}/SKILL.md` (project scope, not global)
 - If multiple skills share the same name, picks the highest-install one and lists the rest
 
+## OpenCode
+
+OpenCode uses its own plugin install; install this plugin separately even if you already use it in another harness.
+
+Tell OpenCode:
+
+```
+Fetch and follow instructions from https://raw.githubusercontent.com/2lbj/auto-skill-downloader/main/INSTALL.md
+```
+
 ## Installation
 
 ### Option A — git

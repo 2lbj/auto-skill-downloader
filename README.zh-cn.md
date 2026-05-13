@@ -33,6 +33,16 @@ Please invoke the skill tool again with name="systematic-debugging" — it is no
 - 安装到 `{项目目录}/.opencode/skills/{name}/SKILL.md`（项目作用域，非全局）
 - 若多个 skill 同名，选安装数最高的，并在输出中列出其余候选项
 
+## OpenCode
+
+OpenCode 使用自己的插件安装机制；即使你已在其他 harness 中使用过本插件，也需要单独为 OpenCode 安装。
+
+告诉 OpenCode：
+
+```
+Fetch and follow instructions from https://raw.githubusercontent.com/2lbj/auto-skill-downloader/main/INSTALL.md
+```
+
 ## 安装方式
 
 ### 方式 A — git（推荐）
