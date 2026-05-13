@@ -1,0 +1,19 @@
+{
+  "name": "auto-skill-downloader",
+  "version": "0.1.0",
+  "description": "OpenCode plugin that automatically downloads missing skills from skills.sh when the skill tool reports 'not found'",
+  "type": "module",
+  "main": ".opencode/plugins/auto-skill-downloader.js",
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "skills",
+    "skills.sh",
+    "agent-skills"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YOUR_USERNAME/auto-skill-downloader.git"
+  }
+}
