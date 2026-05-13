@@ -1,6 +1,15 @@
 # INSTALL — auto-skill-downloader
 
-Machine-readable installation guide for AI agents.
+> **If you are an AI agent installing this plugin**, use the following prompt to guide the process:
+>
+> ```
+> Read INSTALL.md at https://raw.githubusercontent.com/2lbj/auto-skill-downloader/main/INSTALL.md
+> and follow every step exactly to install the auto-skill-downloader plugin into the current user's
+> OpenCode configuration. Use Bash to run all verification commands and confirm each step passes
+> before proceeding to the next.
+> ```
+
+---
 
 ## Prerequisites check
 

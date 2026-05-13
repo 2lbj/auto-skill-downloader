@@ -2,6 +2,8 @@
 
 An [OpenCode](https://opencode.ai) plugin that automatically downloads missing skills from [skills.sh](https://skills.sh) when the `skill` tool reports "not found".
 
+[中文文档](README.zh-cn.md)
+
 ## What it does
 
 When an AI agent calls the `skill` tool and the skill doesn't exist locally, this plugin intercepts the error, searches skills.sh for a match, downloads the best candidate (ranked by install count), and installs it to `.opencode/skills/` in the current project. The agent is then told to retry — no human intervention needed.
@@ -33,23 +35,7 @@ Please invoke the skill tool again with name="systematic-debugging" — it is no
 
 ## Installation
 
-### Option A — npm (once published)
-
-```bash
-npm install -g auto-skill-downloader
-```
-
-Then add to `~/.config/opencode/opencode.json`:
-
-```json
-{
-  "plugin": [
-    "auto-skill-downloader"
-  ]
-}
-```
-
-### Option B — git (current)
+### Option A — git
 
 Add to `~/.config/opencode/opencode.json`:
 
@@ -61,7 +47,7 @@ Add to `~/.config/opencode/opencode.json`:
 }
 ```
 
-### Option C — local path
+### Option B — local path
 
 Clone or copy this repo anywhere, then reference it:
 
