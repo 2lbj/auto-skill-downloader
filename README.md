@@ -56,7 +56,7 @@ Add to `~/.config/opencode/opencode.json`:
 ```json
 {
   "plugin": [
-    "git+https://github.com/YOUR_USERNAME/auto-skill-downloader.git"
+    "git+https://github.com/2lbj/auto-skill-downloader.git"
   ]
 }
 ```
