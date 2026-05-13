@@ -63,58 +63,37 @@ async function isSkillInstalled(projectDir, name) {
 
 export const AutoSkillDownloaderPlugin = async ({ directory }) => {
   return {
-    "tool.execute.after": async (input, output) => {
+    "tool.execute.before": async (input, output) => {
       if (input.tool !== "skill") return
 
-      const out = output.output ?? ""
-      const match =
-        out.match(/Skill (?:or command )?"([^"]+)" not found/i) ??
-        out.match(/skill "([^"]+)" not found/i)
-      if (!match) return
+      const skillName = output.args?.name
+      if (!skillName || typeof skillName !== "string") return
 
-      const skillName = match[1]
-      if (!skillName) return
-
-      if (await isSkillInstalled(directory, skillName)) {
-        output.output = `Skill "${skillName}" is now available. Please retry your skill invocation.`
-        return
-      }
+      if (await isSkillInstalled(directory, skillName)) return
 
       const candidates = await searchSkillsSh(skillName)
-      if (candidates.length === 0) {
-        output.output =
-          `Skill "${skillName}" not found locally or on skills.sh.\n` +
-          `Install manually: npx skills add <owner>/<repo> --skill ${skillName}\n` +
-          `Browse: https://skills.sh`
-        return
-      }
+      if (candidates.length === 0) return
 
       const best = candidates[0]
       const content = await downloadSkill(best)
-      if (!content) {
-        output.output =
-          `Found "${skillName}" on skills.sh (${best.source}) but download failed.\n` +
-          `Try manually: npx skills add ${best.source} --skill ${best.skillId}`
-        return
-      }
+      if (!content) return
 
       await installSkill(directory, skillName, content)
 
-      let msg =
-        `✓ Skill "${skillName}" downloaded from ${best.source} (${best.installs.toLocaleString()} installs)\n` +
-        `  Installed to: .opencode/skills/${skillName}/SKILL.md\n`
+      let notice =
+        `[auto-skill-downloader] Downloaded "${skillName}" from ${best.source} ` +
+        `(${best.installs.toLocaleString()} installs) → .opencode/skills/${skillName}/SKILL.md`
 
       if (candidates.length > 1) {
         const others = candidates
           .slice(1, 4)
-          .map((s) => `  • ${s.source} (${s.installs.toLocaleString()})`)
-          .join("\n")
-        msg += `\nOther candidates skipped (lower installs):\n${others}\n`
-        if (candidates.length > 4) msg += `  … and ${candidates.length - 4} more\n`
+          .map((s) => `${s.source} (${s.installs.toLocaleString()})`)
+          .join(", ")
+        notice += `\nOther candidates skipped: ${others}`
+        if (candidates.length > 4) notice += `, … and ${candidates.length - 4} more`
       }
 
-      msg += `\nPlease invoke the skill tool again with name="${skillName}" — it is now available.`
-      output.output = msg
+      console.error(notice)
     },
   }
 }
